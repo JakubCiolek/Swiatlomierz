@@ -1,5 +1,5 @@
-Include/Src/BH1750.d Include/Src/BH1750.o: ../Include/Src/BH1750.c \
- ../Include/Header/BH1750.h ../Include/Header/twi_master.h \
+Include/Src/twi_master.d Include/Src/twi_master.o: \
+ ../Include/Src/twi_master.c ../Include/Header/twi_master.h \
  c:\program\ files\microchip\xc8\v2.36\avr\avr\include\avr\io.h \
  c:\program\ files\microchip\xc8\v2.36\avr\avr\include\avr\sfr_defs.h \
  c:\program\ files\microchip\xc8\v2.36\avr\avr\include\inttypes.h \
@@ -14,12 +14,7 @@ Include/Src/BH1750.d Include/Src/BH1750.o: ../Include/Src/BH1750.c \
  c:\program\ files\microchip\xc8\v2.36\avr\avr\include\avr\fuse.h \
  c:\program\ files\microchip\xc8\v2.36\avr\avr\include\avr\lock.h \
  c:\program\ files\microchip\xc8\v2.36\avr\avr\include\util\twi.h \
- c:\program\ files\microchip\xc8\v2.36\avr\lib\gcc\avr\5.4.0\include\stdbool.h \
- c:\program\ files\microchip\xc8\v2.36\avr\avr\include\util\delay.h \
- c:\program\ files\microchip\xc8\v2.36\avr\avr\include\util\delay_basic.h \
- c:\program\ files\microchip\xc8\v2.36\avr\avr\include\math.h
-
-../Include/Header/BH1750.h:
+ c:\program\ files\microchip\xc8\v2.36\avr\lib\gcc\avr\5.4.0\include\stdbool.h
 
 ../Include/Header/twi_master.h:
 
@@ -52,9 +47,3 @@ c:\program\ files\microchip\xc8\v2.36\avr\avr\include\avr\lock.h:
 c:\program\ files\microchip\xc8\v2.36\avr\avr\include\util\twi.h:
 
 c:\program\ files\microchip\xc8\v2.36\avr\lib\gcc\avr\5.4.0\include\stdbool.h:
-
-c:\program\ files\microchip\xc8\v2.36\avr\avr\include\util\delay.h:
-
-c:\program\ files\microchip\xc8\v2.36\avr\avr\include\util\delay_basic.h:
-
-c:\program\ files\microchip\xc8\v2.36\avr\avr\include\math.h:

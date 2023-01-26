@@ -12,5 +12,7 @@ Include\Src\lcd.c
 
 Include\Src\rotary.c
 
+Include\Src\twi_master.c
+
 main.c
 

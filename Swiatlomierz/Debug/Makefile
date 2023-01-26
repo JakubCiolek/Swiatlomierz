@@ -45,6 +45,7 @@ C_SRCS +=  \
 ../Include/Src/i2c.c \
 ../Include/Src/lcd.c \
 ../Include/Src/rotary.c \
+../Include/Src/twi_master.c \
 ../main.c
 
 
@@ -60,6 +61,7 @@ Include/Src/font.o \
 Include/Src/i2c.o \
 Include/Src/lcd.o \
 Include/Src/rotary.o \
+Include/Src/twi_master.o \
 main.o
 
 OBJS_AS_ARGS +=  \
@@ -68,6 +70,7 @@ Include/Src/font.o \
 Include/Src/i2c.o \
 Include/Src/lcd.o \
 Include/Src/rotary.o \
+Include/Src/twi_master.o \
 main.o
 
 C_DEPS +=  \
@@ -76,6 +79,7 @@ Include/Src/font.d \
 Include/Src/i2c.d \
 Include/Src/lcd.d \
 Include/Src/rotary.d \
+Include/Src/twi_master.d \
 main.d
 
 C_DEPS_AS_ARGS +=  \
@@ -84,6 +88,7 @@ Include/Src/font.d \
 Include/Src/i2c.d \
 Include/Src/lcd.d \
 Include/Src/rotary.d \
+Include/Src/twi_master.d \
 main.d
 
 OUTPUT_FILE_PATH +=Swiatlomierz.elf
@@ -129,6 +134,13 @@ Include/Src/lcd.o: ../Include/Src/lcd.c
 	
 
 Include/Src/rotary.o: ../Include/Src/rotary.c
+	@echo Building file: $<
+	@echo Invoking: XC8 C Compiler : 2.36
+	$(QUOTE)C:\Program Files\Microchip\xc8\v2.36\bin\xc8-cc.exe$(QUOTE)  -mcpu=ATmega328P  -mdfp="C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\xc8"  -c -x c -funsigned-char -funsigned-bitfields -mext=cci -D__ATmega328P__ -DDEBUG -DF_CPU=8000000L  -UTCCR2 -UTIMSK  -I"../Include" -I"../Include/Header" -I"../Include/Src"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+Include/Src/twi_master.o: ../Include/Src/twi_master.c
 	@echo Building file: $<
 	@echo Invoking: XC8 C Compiler : 2.36
 	$(QUOTE)C:\Program Files\Microchip\xc8\v2.36\bin\xc8-cc.exe$(QUOTE)  -mcpu=ATmega328P  -mdfp="C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\xc8"  -c -x c -funsigned-char -funsigned-bitfields -mext=cci -D__ATmega328P__ -DDEBUG -DF_CPU=8000000L  -UTCCR2 -UTIMSK  -I"../Include" -I"../Include/Header" -I"../Include/Src"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

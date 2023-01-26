@@ -8,10 +8,9 @@
 #include <xc.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
-#include <avr/interrupt.h>
 
 //#include <Wire.h>
-//#include <BH1750.h>
+#include "BH1750.h"
 //****main.c****//
 #include "lcd.h"
 
@@ -206,22 +205,6 @@ void displayISO(short ISO)
 	}
 }
 
-void Timer2_Init(void)
-{
-	TCNT2=0x00;
-}
-//start timer2
-void Timer2_Start(void)
-{
-	TCCR2|=(1<<CS22)|(1<<CS21); //prescaller 256 ~122 interrupts/s
-	TIMSK|=(1<<TOIE2);//Enable Timer0 Overflow interrupts
-}
-//timer ISR check for rotarry encoder status
-ISR(TIMER2_OVF_vect)
-{
-	//reading rotary and button
-	RotaryCheckStatus();
-}
 
 int main(void){
 	
@@ -242,7 +225,6 @@ int main(void){
 	short T = initT;
 	short ISO = initISO;
 	short lx;
-	
 	//=================================================================================
 	
 	//================================ ustawienie pinów jako input ====================
@@ -251,15 +233,7 @@ int main(void){
 	PORTD|=1<<PIND2; //przycisk enkodera
 	PORTD|=1<<PIND3; // przycisk
 	//======================= enkoder =============
-	RotaryInit();
-	//taimerio 2 nustatymas
-	Timer2_Init();
-	//Taimerio 2 paleidimas
-	Timer2_Start();
-	//enable global interrupts
-	sei();
 	//=============================================
-	
 		
 	lcd_init(LCD_DISP_ON);    // init lcd and turn on
 	short mode=1;
@@ -292,97 +266,99 @@ int main(void){
 		
 							if(bit_is_clear(PIND,3)) //przycisk
 							{
-								int light = 600; //tutaj musi byæ odczyt z czujnika
+								char str[20];
+								float light = ReadLight(); //tutaj musi byæ odczyt z czujnika
+								lcd_gotoxy(10,2);
+								sprintf(str, "%g", light);
+								lcd_puts(str);
 								short shift=0;
-								if(mode==1)
-								{
-									//lx = (initLx/lxmes)/2; // tutaj cos mo¿e byæ Ÿle
-									//shift=(initISO-ISO)+(initA-A)+lx;
-									T=T-shift;
-									if(T>10)
-									{
-										T=10;
-									}
-									else if(T<0)
-									{
-										T=0;
-									}
-								}
-								else if(mode==2)
-								{
-									//lx = (initLx/lxmes)/2; // tutaj cos mo¿e byæ Ÿle
-									//shift=(initISO-ISO)+(initT-T)+lx;
-									A=A-shift;
-									if(A>8)
-									{
-										A=8;
-									}
-									else if(A<0)
-									{
-										A=0;
-									}
-								}
-									mode=0;
-									DislpayInterface(mode);	
+								
+// 								if(mode==1)
+// 								{
+// 									//lx = (initLx/lxmes)/2; // tutaj cos mo¿e byæ Ÿle
+// 									//shift=(initISO-ISO)+(initA-A)+lx;
+// 									T=T-shift;
+// 									if(T>10)
+// 									{
+// 										T=10;
+// 									}
+// 									else if(T<0)
+// 									{
+// 										T=0;
+// 									}
+// 								}
+// 								else if(mode==2)
+// 								{
+// 									//lx = (initLx/lxmes)/2; // tutaj cos mo¿e byæ Ÿle
+// 									//shift=(initISO-ISO)+(initT-T)+lx;
+// 									A=A-shift;
+// 									if(A>8)
+// 									{
+// 										A=8;
+// 									}
+// 									else if(A<0)
+// 									{
+// 										A=0;
+// 									}
+// 								}
+// 									mode=0;
+// 									DislpayInterface(mode);	
 							}
 							//==================================================================
 		
 		
-								// ======================== poll encoder ======================
-								if(RotaryGetStatus()==1)//right
-								{
-									if(mode==0)//iso
-									{
-										if(ISO<5)
-										{
-											ISO++;
-											displayISO(ISO);
-										}
-									}
-									else if(mode==1)//A
-									{
-										if(A<8)
-										{
-											A++;
-											displayA(A);
-										}
-									}
-									else//T
-									{
-										if(T<10)
-										{
-											T++;
-											displayT(T);
-										}
-									}
-								}
-								else if (RotaryGetStatus()==2)//left
-								{
-									if(mode==0)//iso
-									{
-										if(ISO>0)
-										{
-											ISO--;
-											displayISO(ISO);
-										}
-									}
-									else if(mode==1)//A
-									{
-										if(A>0)
-										{
-											A--;
-											displayA(A);
-										}
-									}
-									else//T
-									{
-										if(T>0)
-										{
-											T--;
-											displayT(T);
-										}
-									}
-								}
+								// ======================== plus enkoder ======================
+								
+// 										if(mode==0)//iso
+// 										{
+// 											if(ISO<5)
+// 											{
+// 												ISO++;
+// 												displayISO(ISO);
+// 											}
+// 										}
+// 										else if(mode==1)//A
+// 										{
+// 											if(A<8)
+// 											{
+// 												A++;
+// 												displayA(A);
+// 											}
+// 										}
+// 										else//T
+// 										{
+// 											if(T<10)
+// 											{
+// 												T++;
+// 												displayT(T);
+// 											}
+// 										}
+									//================================== minus enkoder ==================
+// 										if(mode==0)//iso
+// 										{
+// 											if(ISO>0)
+// 											{
+// 												ISO--;
+// 												displayISO(ISO);
+// 											}
+// 										}
+// 										else if(mode==1)//A
+// 										{
+// 											if(A>0)
+// 											{
+// 												A--;
+// 												displayA(A);
+// 											}
+// 										}
+// 										else//T
+// 										{
+// 											if(T>0)
+// 											{
+// 												T--;
+// 												displayT(T);
+// 											}
+// 										}
+								
 								
 						//======================================================================= 
 	}
