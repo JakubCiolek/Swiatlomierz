@@ -7,9 +7,7 @@
 
 #include <xc.h>
 #include <util/delay.h>
-#include <avr/pgmspace.h>
 
-//#include <Wire.h>
 #include "BH1750.h"
 //****main.c****//
 #include "lcd.h"
@@ -204,7 +202,81 @@ void displayISO(short ISO)
 		
 	}
 }
+//================================enkoder ==========================
+#define _BV(bit) (1 << (bit))
 
+// W tym przykladzie enkoder jest podlaczony do pinow PIND4 i PIND5
+// w main jest wlaczone podciagniecie - jezeli masz te rezystory to nie bedzie to potrzebne
+
+
+int8_t enc_delta;
+
+void ReadEncoder()
+{
+	static int8_t last;
+	static uint8_t laststate;
+	static uint8_t counters[2];	//Tablica zawieraj¹ca liczniki
+	int8_t newpos, diff;
+	
+	uint8_t state=PINB;
+	if(((state^laststate) & _BV(PIND4)) && (counters[0]==0))
+	{
+		counters[0]=200;
+		laststate&=(~_BV(PIND4));
+		laststate|=(state & _BV(PIND4));
+	}
+
+	if(((state^laststate) & _BV(PIND5)) && (counters[1]==0))
+	{
+		counters[1]=200;
+		laststate&=(~_BV(PIND5));
+		laststate|=(state & _BV(PIND5));
+	}
+
+	uint8_t przerwa=0;
+	for(uint8_t c=0;c<2;c++)
+	if(counters[c])
+	{
+		counters[c]--;
+		przerwa=1;			//Robimy opóŸnienie tylko jeœli któryœ z liczników by³ !=0
+	}
+	if(przerwa) _delay_ms(10);
+
+	newpos=0;
+	if((PIND & _BV(PIND4))==0) newpos=3;
+	if((PIND & _BV(PIND5))==0) newpos^=1;	// konwersja kodu Graya na binarny
+	diff=last-newpos;
+	if(diff & 1)
+	{				// bit 0 = krok
+		last=newpos;
+		enc_delta+=(diff & 2)-1;	//bit 1 - kierunek
+	}
+}
+int8_t Read1StepEncoder()
+{
+	ReadEncoder();
+	int8_t val=enc_delta;
+	enc_delta=0;
+	return val;
+}
+
+int8_t Read2StepEncoder()
+{
+	ReadEncoder();
+	int8_t val=enc_delta;
+	enc_delta=val & 1;
+	return val>>1;
+}
+
+int8_t Read4StepEncoder()
+{
+	ReadEncoder();
+	int8_t val=enc_delta;
+	enc_delta=val & 3;
+	return val>>2;
+}
+
+//==================================================================
 
 int main(void){
 	
@@ -229,9 +301,10 @@ int main(void){
 	
 	//================================ ustawienie pinów jako input ====================
 	
-	DDRD = 0b00000000;
+	//DDRD = 0b00000000;
 	PORTD|=1<<PIND2; //przycisk enkodera
 	PORTD|=1<<PIND3; // przycisk
+	PORTD|=_BV(PIND4) | _BV(PIND5);
 	//======================= enkoder =============
 	//=============================================
 		
@@ -242,6 +315,7 @@ int main(void){
 	displayA(A);
 	displayT(T);
 	displayISO(ISO);
+	int dupa=0;
 	while(1){
 							// =========== obs³uga przycisku do zmiany trybu ========================
 		
@@ -305,59 +379,78 @@ int main(void){
 // 									DislpayInterface(mode);	
 							}
 							//==================================================================
-		
-		
-								// ======================== plus enkoder ======================
 								
-// 										if(mode==0)//iso
+								// ======================== plus enkoder ======================
+								switch(Read2StepEncoder())  // zwieksza lub zmniejsza x od zero do dziesiec
+								{
+									case -1 : dupa=1;	 
+																
+// 									if(mode==0)//iso
+// 									{
+// 										if(ISO>0)
 // 										{
-// 											if(ISO<5)
-// 											{
-// 												ISO++;
-// 												displayISO(ISO);
-// 											}
+// 											ISO--;
+// 											displayISO(ISO);
 // 										}
-// 										else if(mode==1)//A
+// 									}
+// 									else if(mode==1)//A
+// 									{
+// 										if(A>0)
 // 										{
-// 											if(A<8)
-// 											{
-// 												A++;
-// 												displayA(A);
-// 											}
+// 											A--;
+// 											displayA(A);
 // 										}
-// 										else//T
+// 									}
+// 									else//T
+// 									{
+// 										if(T>0)
 // 										{
-// 											if(T<10)
-// 											{
-// 												T++;
-// 												displayT(T);
-// 											}
+// 											T--;
+// 											displayT(T);
 // 										}
+// 									} 
+									break;
+									case 0  :	break;
+									case 1  : dupa=2;	
+																	
+// 									if(mode==0)//iso
+// 									{
+// 										if(ISO<5)
+// 										{
+// 											ISO++;
+// 											displayISO(ISO);
+// 										}
+// 									}
+// 									else if(mode==1)//A
+// 									{
+// 										if(A<8)
+// 										{
+// 											A++;
+// 											displayA(A);
+// 										}
+// 									}
+// 									else//T
+// 									{
+// 										if(T<10)
+// 										{
+// 											T++;
+// 											displayT(T);
+// 										}
+// 									} 
+									break;
+								};
+								if(dupa==1)
+								{
+									lcd_gotoxy(10,5);
+									lcd_puts("-");
+								}
+								else if (dupa ==2)
+								{
+									lcd_gotoxy(10,5);
+									lcd_puts("+");
+								}
 									//================================== minus enkoder ==================
-// 										if(mode==0)//iso
-// 										{
-// 											if(ISO>0)
-// 											{
-// 												ISO--;
-// 												displayISO(ISO);
-// 											}
-// 										}
-// 										else if(mode==1)//A
-// 										{
-// 											if(A>0)
-// 											{
-// 												A--;
-// 												displayA(A);
-// 											}
-// 										}
-// 										else//T
-// 										{
-// 											if(T>0)
-// 											{
-// 												T--;
-// 												displayT(T);
-// 											}
-// 										}
+
 								
 								
 						//======================================================================= 
