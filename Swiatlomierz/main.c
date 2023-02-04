@@ -311,20 +311,20 @@ int main(void){
 									float light = ReadLight(); //tutaj musi byæ odczyt z czujnika
 									
 									short lx=0;
-									short lxtab[12]={14144,7072,3536,1768,884,442,221,110,55,27,13,8};
-										if(light>15000)
+									short lxtab[15]={28288,14144,7072,3536,1768,884,442,221,110,55,27,13,8,4,2};
+										if(light>28288 || light<0)
 										{
 											lx=0;
 											
 										}
 										else
 										{
-											for(uint8_t i=0 ;i<11;i++)
+											for(uint8_t i=0 ;i<15;i++)
 											{
 												lxtab[i]= absolute(lxtab[i]-light);
 											}
 											short min=lxtab[0];
-											for(uint8_t i=0 ;i<11;i++)
+											for(uint8_t i=0 ;i<15;i++)
 											{
 												if(lxtab[i]<=min)
 												{
@@ -361,13 +361,13 @@ int main(void){
 									float light = ReadLight(); //tutaj musi byæ odczyt z czujnika
 									
 									short lx=0;
-									short lxtab[11]={14144,7072,3536,1768,884,221,110,55,27,13,8};
-									for(uint8_t i=0 ;i<11;i++)
+									short lxtab[15]={28288,14144,7072,3536,1768,884,442,221,110,55,27,13,8,4,2};
+									for(uint8_t i=0 ;i<15;i++)
 									{
 										lxtab[i]= absolute(lxtab[i]-light);
 									}
 									short min=lxtab[0];
-									for(uint8_t i=0 ;i<11;i++)
+									for(uint8_t i=0 ;i<15;i++)
 									{
 										if(lxtab[i]<=min)
 										{
