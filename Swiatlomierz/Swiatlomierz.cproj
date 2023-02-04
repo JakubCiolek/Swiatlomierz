@@ -137,9 +137,6 @@
     <Compile Include="Include\Header\lcd.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Include\Header\rotary.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Include\Header\twi_master.h">
       <SubType>compile</SubType>
     </Compile>
@@ -153,9 +150,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Include\Src\lcd.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Include\Src\rotary.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Include\Src\twi_master.c">

@@ -10,8 +10,6 @@ Include\Src\i2c.c
 
 Include\Src\lcd.c
 
-Include\Src\rotary.c
-
 Include\Src\twi_master.c
 
 main.c
