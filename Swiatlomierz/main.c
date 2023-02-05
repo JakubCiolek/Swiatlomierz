@@ -28,28 +28,34 @@ void DislpayInterface(int mode)
 		case 0:
 		lcd_gotoxy(0,0);
 		lcd_puts(">ISO|");
-		lcd_gotoxy(0,3);
+		lcd_gotoxy(0,2);
 		lcd_puts("   A|");
-		lcd_gotoxy(0,6);
+		lcd_gotoxy(0,4);
 		lcd_puts("   T|");
+		lcd_gotoxy(0,7);
+		lcd_puts(" LUX|");
 		break;
 	
 		case 1:
 
 		lcd_gotoxy(0,0);
 		lcd_puts(" ISO|");
-		lcd_gotoxy(0,3);
+		lcd_gotoxy(0,2);
 		lcd_puts(">  A|");
-		lcd_gotoxy(0,6);
+		lcd_gotoxy(0,4);
 		lcd_puts("   T|");
+		lcd_gotoxy(0,7);
+		lcd_puts(" LUX|");
 		break;	
 		case 2:
 		lcd_gotoxy(0,0);
 		lcd_puts(" ISO|");
-		lcd_gotoxy(0,3);
+		lcd_gotoxy(0,2);
 		lcd_puts("   A|");
-		lcd_gotoxy(0,6);
+		lcd_gotoxy(0,4);
 		lcd_puts(">  T|");
+		lcd_gotoxy(0,7);
+		lcd_puts(" LUX|");
 		break;
 		default:
 		break;
@@ -61,50 +67,50 @@ void displayA(short A)
 	switch(A)
 	{
 		case 0:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("22.0");
 		break;
 		case 1:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("16.0");
 		break;
 		case 2:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("11.0");
 		break;
 		case 3:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("8.0 ");
 		break;
 		case 4:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("5.6 ");
 		break;
 		case 5:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("4.0 ");
 		break;
 		case 6:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("2.8 ");
 		break;
 		case 7:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("2.0 ");
 		break;
 		case 8:
-		lcd_gotoxy(11,3);
+		lcd_gotoxy(11,2);
 		lcd_puts("1.4 ");
 		break;
 		default:
 		if(A>8)
 		{
-			lcd_gotoxy(11,3);
+			lcd_gotoxy(11,2);
 			lcd_puts("1.4 ");		
 		}
 		else
 		{
-			lcd_gotoxy(11,3);
+			lcd_gotoxy(11,2);
 			lcd_puts("22.0");
 		}
 		
@@ -118,58 +124,58 @@ void displayT(short T)
 	switch(T)
 	{
 		case 0:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/2    ");
 		break;
 		case 1:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/4    ");
 		break;
 		case 2:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/8    ");
 		break;
 		case 3:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/15   ");
 		break;
 		case 4:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/30   ");
 		break;
 		case 5:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/60   ");
 		break;
 		case 6:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/125  ");
 		break;
 		case 7:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/250  ");
 		break;
 		case 8:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/500  ");
 		break;
 		case 9:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/1000 ");
 		break;
 		case 10:
-		lcd_gotoxy(11,6);
+		lcd_gotoxy(11,4);
 		lcd_puts("1/2000 ");
 		break;
 		default:
 		if(T>10)
 		{
-			lcd_gotoxy(11,6);
+			lcd_gotoxy(11,4);
 			lcd_puts("1/2000 ");
 		}
 		else
 		{
-			lcd_gotoxy(11,6);
+			lcd_gotoxy(11,4);
 			lcd_puts("1/2    ");
 		}
 		break;
@@ -315,7 +321,7 @@ int main(void){
 										if(light>28288 || light<0)
 										{
 											lx=0;
-											
+											light = 32245.0;
 										}
 										else
 										{
@@ -351,10 +357,12 @@ int main(void){
 										}
 										displayT(T);
 										shift=0;
-										//char str[10];
-										//lcd_gotoxy(1,2);
-										//sprintf(str, "%g", light);
-										//lcd_puts(str);
+										char str[5];
+										lcd_gotoxy(11,7);
+										lcd_puts("          ");
+										lcd_gotoxy(11,7);
+										sprintf(str, "%g", light);
+										lcd_puts(str);
 								}
 								else if (mode==2)
 								{
@@ -393,10 +401,12 @@ int main(void){
 									}
 									displayA(A);
 									shift=0;
-									//char str[10];
-									//lcd_gotoxy(1,2);
-									//sprintf(str, "%g", light);
-									//lcd_puts(str);
+									char str[5];
+									lcd_gotoxy(11,7);
+									lcd_puts("          ");
+									lcd_gotoxy(11,7);
+									sprintf(str, "%g", light);
+									lcd_puts(str);
 								}
 								
 
